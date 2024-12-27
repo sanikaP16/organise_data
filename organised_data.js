@@ -1,20 +1,19 @@
 import { people } from "./data_.js";
-import { count, reductions, petsOf } from "./helping_functions.js";
+import { count as filterAndCount, reductions, petsOf } from "./helping_functions.js";
 
-//-----------------------------------------------------------------------------
 // 1. How many individuals are currently employed?  
 const countOfEmployedPeople = (people) =>
-  count(people, person => person.employment.isEmployed);
+  filterAndCount(people, person => person.employment.isEmployed);
 
 // 2. How many people own a car ?
 const NumberOfPeopleWithCar = (people) =>
-  count(people, person => person.hasCar);
+  filterAndCount(people, person => person.hasCar);
 
 // 3. How many pets are fully vaccinated?
 const countFullyVaccinatePets = (people) => {
   const pets = petsOf(people);
 
-  return count(pets, pet => pet.isFullyVaccinated);
+  return filterAndCount(pets, pet => pet.isFullyVaccinated);
 };
 
 // 4. What are the names of all the pets, and what type of animal is each?
@@ -75,14 +74,14 @@ const hasPet = (person => person.pets.length !== 0);
 
 const getpetsCount = (people) => {
   const peopleStudiedCS = getPeopleStudiedCS(people);
-  const petCount = count(peopleStudiedCS, hasPet);
+  const petCount = filterAndCount(peopleStudiedCS, hasPet);
 
   return { peopleStudiedCS: peopleStudiedCS.length, CountOfpets: petCount };
 };
 
 // 10. How many individuals own more than one pets?
 const peopleWithMorePets = (people) => {
-  return count(people, person => person.pets.length > 1);
+  return filterAndCount(people, person => person.pets.length > 1);
 };
 
 // 11. Which pets are associated with specific favorite activities?
@@ -116,7 +115,7 @@ const vaccinatedPets = (people) => {
   const peopleWithoutCar = people.filter(hasCar);
   const pets = petsOf(peopleWithoutCar);
 
-  return count(pets, pet => pet.isVaccinated);
+  return filterAndCount(pets, pet => pet.isVaccinated);
 };
 
 // 14. What is the most common type of pet among the group? 
@@ -145,7 +144,7 @@ const commonPet = people => {
 
 // 15. How many individuals have more than two hobbies?
 const moreThanTwoHobbies = (people) =>
-  count(people, person => person.hobbies.length > 2);
+  filterAndCount(people, person => person.hobbies.length > 2);
 
 // 16. How many individuals share at least one hobby with Ramesh? 
 // need to change
@@ -189,7 +188,7 @@ const youngestPet = (people) => {
 
 // 19. How many individuals live in cities starting with the letter "B"?
 const livingInCityB = (people) => {
-  return count(people, person => person.city.startsWith("B"));
+  return filterAndCount(people, person => person.city.startsWith("B"));
 };
 
 // 20. Which individuals do not own any pets?
