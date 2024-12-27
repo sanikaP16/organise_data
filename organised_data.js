@@ -1,40 +1,34 @@
 import { people } from "./data_.js";
-
-const count = (array, predicate) => array.filter(predicate).length;
-
-const reductions = (array, reducer, init) => array.reduce(reducer, init);
-
-const petsOf = (people) => people.flatMap(person => person.pets);
+import { count, reductions, petsOf } from "./helpting_functions.js";
 
 //-----------------------------------------------------------------------------
 // 1. How many individuals are currently employed?  
-const countOfEmployedPeople = (people) => {
-  return count(people, person => person.employment.isEmployed);
-};
+const countOfEmployedPeople = (people) =>
+  count(people, person => person.employment.isEmployed);
 
 // 2. How many people own a car ?
-const howManyOwnCar = (people) => {
-  return count(people, ({ hasCar }) => hasCar);
-};
+const NumberOfPeopleWithCar = (people) => count(people, ({ hasCar }) => hasCar);
 
 // 3. How many pets are fully vaccinated?
-const countVaccinated = (people) => {
+const countFullyVaccinatePets = (people) => {
   const pets = petsOf(people);
+
   return count(pets, pet => pet.isFullyVaccinated);
 };
 
 // 4. What are the names of all the pets, and what type of animal is each?
-const animalInfo = (people) => {
+const petsInformation = (people) => {
   const pets = petsOf(people);
+
   return pets.map(({ name, typeOfPet: type }) => ({ name, type }));
 };
 
 // 5. Which cities do the individuals live in?
-const getCities = (people) => {
+const getCitiesOfPeople = (people) => {
   return people.map(({ name, city }) => ({ name, city }));
 };
 
-// 6. How many hobbies are shared across the group? What are they?*(****)
+// 6. How many hobbies are shared across the group? What are they?
 const getHobbies = people => people.flatMap(({ hobbies }) => hobbies);
 
 const getUniqueList = (accumalator, element) => {
@@ -45,9 +39,9 @@ const getUniqueList = (accumalator, element) => {
   return accumalator;
 };
 
-const hobbiesList = () => {
+const hobbiesOfPeople = () => {
   const listOfHobbies = getHobbies(people);
-  const uniqueListOfHobbies = listOfHobbies.reduce(getUniqueList, []);
+  const uniqueListOfHobbies = reductions(listOfHobbies, getUniqueList, []);
 
   return {
     numberOfHobbies: uniqueListOfHobbies.length,
@@ -56,8 +50,10 @@ const hobbiesList = () => {
 };
 
 // 7. How many pets belong to people who are currently unemployed?
+const getUnemployedPeople = person => !person.employment.isEmployed;
+
 const getpetsOfUnemployed = (people) => {
-  const unemployedPeople = people.filter(person => !person.employment.isEmployed);
+  const unemployedPeople = people.filter(getUnemployedPeople);
 
   return petsOf(unemployedPeople).length;
 };
@@ -84,7 +80,7 @@ const getpetsCount = (people) => {
 };
 
 // 10. How many individuals own more than one pets?
-const moreThanOnepets = (people) => {
+const peopleWithMorePets = (people) => {
   return count(people, person => person.pets.length > 1);
 };
 
@@ -148,7 +144,6 @@ const commonPet = people => {
 const moreThanTwoHobbies = (people) =>
   count(people, person => person.hobbies.length > 2);
 
-
 // 16. How many individuals share at least one hobby with Ramesh? 
 // need to change
 const sameHobbiesWithRamesh = (people) => {
@@ -181,7 +176,7 @@ const getYoungPet = (accumalator, pet) => {
 
 const youngestPet = (people) => {
   const pets = petsOf(people);
-  const youngPet = pets.reduce(getYoungPet, []);
+  const youngPet = reductions(pets, getYoungPet, []);
 
   return { nameOfPet: youngPet.name, age: youngPet.age };
 };
@@ -195,23 +190,27 @@ const livingInCityB = (people) => {
 };
 
 // 20. Which individuals do not own any pets?
+const invert = (functionToComplement) => {
+  return (...args) => !functionToComplement(...args)
+};
+
 const peopleWitoutPets = (people) => {
-  return people.filter(({ pets }) =>
-    pets.length === 0).map(({ name }) => name);
+  const peopleWithNoPets = people.filter(invert(hasPet));
+  return peopleWithNoPets.map(({ name }) => name);
 };
 
 //------------------------------------------------------------------------------
 const testAll = function () {
   console.log(countOfEmployedPeople(people));
-  console.log(howManyOwnCar(people));
-  console.log(countVaccinated(people));
-  console.log(animalInfo(people));
-  console.log(getCities(people));
-  console.log(hobbiesList(people));
+  console.log(NumberOfPeopleWithCar(people));
+  console.log(countFullyVaccinatePets(people));
+  console.log(petsInformation(people));
+  console.log(getCitiesOfPeople(people));
+  console.log(hobbiesOfPeople(people));
   console.log(getpetsOfUnemployed(people));
   console.log(getAverageAge(people));
   console.log(getpetsCount(people));
-  console.log(moreThanOnepets(people));
+  console.log(peopleWithMorePets(people));
   console.log(favActivities(people));
   console.log(nameOfAnimal(people));
   console.log(vaccinatedPets(people));
