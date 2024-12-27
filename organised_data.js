@@ -150,7 +150,7 @@ const moreThanTwoHobbies = (people) =>
 
 
 // 16. How many individuals share at least one hobby with Ramesh? 
-/// review again
+// need to change
 const sameHobbiesWithRamesh = (people) => {
   const targetPerson = people.find(({ name }) => name === "Ramesh");
   const targetHobbies = targetPerson.hobbies;
