@@ -1,5 +1,5 @@
 import { people } from "./data_.js";
-import { count, reductions, petsOf } from "./helpting_functions.js";
+import { count, reductions, petsOf } from "./helping_functions.js";
 
 //-----------------------------------------------------------------------------
 // 1. How many individuals are currently employed?  
@@ -7,7 +7,8 @@ const countOfEmployedPeople = (people) =>
   count(people, person => person.employment.isEmployed);
 
 // 2. How many people own a car ?
-const NumberOfPeopleWithCar = (people) => count(people, ({ hasCar }) => hasCar);
+const NumberOfPeopleWithCar = (people) =>
+  count(people, person => person.hasCar);
 
 // 3. How many pets are fully vaccinated?
 const countFullyVaccinatePets = (people) => {
@@ -109,8 +110,10 @@ const nameOfAnimal = (people) => {
 };
 
 // 13. How many vaccinated pets belong to people who do not own a car?
+const hasCar = person => !person.hasCar;
+
 const vaccinatedPets = (people) => {
-  const peopleWithoutCar = people.filter(({ hasCar }) => !hasCar);
+  const peopleWithoutCar = people.filter(hasCar);
   const pets = petsOf(peopleWithoutCar);
 
   return count(pets, pet => pet.isVaccinated);
@@ -186,12 +189,12 @@ const youngestPet = (people) => {
 
 // 19. How many individuals live in cities starting with the letter "B"?
 const livingInCityB = (people) => {
-  return count(people, (({ city }) => city.startsWith("B")))
+  return count(people, person => person.city.startsWith("B"));
 };
 
 // 20. Which individuals do not own any pets?
 const invert = (functionToComplement) => {
-  return (...args) => !functionToComplement(...args)
+  return (...args) => !functionToComplement(...args);
 };
 
 const peopleWitoutPets = (people) => {
